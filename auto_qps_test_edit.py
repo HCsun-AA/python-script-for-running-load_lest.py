@@ -115,6 +115,7 @@ def run_probe_and_get_ttft(probe_log_path):
         f.write("\n")
 
     # 尝试抓 TTFT：先找包含 ttft 的行，再抓里面的数字
+    # 用来直接抓取ttft的代码（可以删除）
     ttft_value = None
     for line in result.stdout.splitlines():
         if "ttft" in line.lower():
@@ -234,3 +235,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
