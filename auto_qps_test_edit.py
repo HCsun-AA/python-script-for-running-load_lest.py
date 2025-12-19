@@ -20,7 +20,7 @@ QPS_START = 10
 QPS_STEP = 5
 QPS_MAX = 200
 
-PLATEAU_SECONDS = 60
+PLATEAU_SECONDS = 15
 POLL_SECONDS = 1
 
 # 如果你原来“跑得通”的 locust 命令里需要额外参数（最常见就是 --chat）
@@ -57,6 +57,9 @@ def get_num_requests_running():
 
 
 def start_main_locust(qps, main_log_path):
+    users = int(qps * 1.5)
+    spawn_rate = int(qps * 1.5)
+    
     cmd = [
         "locust",
         "-f", "load_test.py",
@@ -65,8 +68,8 @@ def start_main_locust(qps, main_log_path):
         "--provider", "vllm",
         "--model", "/data/models/Qwen3-8B",
         "--tokenizer", "/data/models/Qwen3-8B",
-        "-u", "50",
-        "-r", "50",
+        "-u", str(users),
+        "-r", str(spawn_rate),
         "--qps", str(qps),
         "-t", "99999s",
         "--max-tokens", "1000",
@@ -144,7 +147,7 @@ def wait_until_plateau(watcher_log_path):
     """
     关键改动：
     1) 先等到 num_requests_running > 0 至少出现一次（证明 locust 真打到了模型）
-    2) 然后再开始“60秒不增长=平台期”的判断
+    2) 然后再开始“15秒不增长=平台期”的判断
     """
     print("[" + now_string() + "] 等待 num_requests_running 先变成 > 0 (证明主压测真的打到了模型)...")
 
@@ -235,5 +238,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
