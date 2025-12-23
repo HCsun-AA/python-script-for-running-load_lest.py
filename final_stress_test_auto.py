@@ -425,8 +425,8 @@ def main():
     results_csv = os.path.join(out_path, "results.csv")
 
     with open(results_csv, "w", encoding="utf-8") as f:
-        #f.write("time,model_key,main_qps,plateau_running,probe_ttft,main_log,probe_log\n")
-        f.write("qps,user,spawn,run,wait,probe_ttft, probe_log\n")
+        #f.write("time,model_key,main_qps,plateau_running,probe_ttft,test_time,main_log,probe_log\n")
+        f.write("qps,user,spawn,run,wait,probe_ttft,test_time,probe_log\n")
 
     # 1) 启动 vLLM（容器内）
     if not args.skip_start_server:
@@ -506,6 +506,7 @@ def main():
                 f.write(str(plateau_value) + ",")
                 f.write(str(plateau_waiting) + ",")
                 f.write(str(ttft) + ",")
+                f.write(str(args.probe_runtime_seconds) + ",")
                 #f.write(main_log + ",")
                 f.write(probe_log + "\n")
 
@@ -543,4 +544,5 @@ def main():
         print("{:<20} {:<}".format(row[0], row[1]))
 
 if __name__ == "__main__":
+
     main()
